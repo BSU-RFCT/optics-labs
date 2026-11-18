@@ -1,0 +1,60 @@
+name: Build PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lab*/**"
+      - ".github/workflows/build-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-pdf
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk cm-super \
+            texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-fonts-extra \
+            texlive-lang-cyrillic texlive-pictures texlive-science \
+            texlive-plain-generic
+
+      - name: Build reports
+        run: |
+          mkdir -p out
+          for tex in lab*/[0-9]*.tex; do
+            dir=$(dirname "$tex")
+            file=$(basename "$tex")
+            (cd "$dir" && latexmk -pdf -interaction=nonstopmode -halt-on-error "$file")
+            cp "$dir/${file%.tex}.pdf" "out/$dir.pdf"
+          done
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-logs
+          path: lab*/*.log
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest "$GITHUB_SHA"
+          git push -f origin refs/tags/latest
+          if ! gh release view latest >/dev/null 2>&1; then
+            gh release create latest --title "Отчёты" --notes "PDF собираются автоматически из последней версии main."
+          fi
+          gh release upload latest out/*.pdf --clobber
