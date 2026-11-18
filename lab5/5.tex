@@ -1,0 +1,232 @@
+\documentclass[14pt,a4paper]{extarticle}
+
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{newtxtext,newtxmath}
+
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}, separate-uncertainty, per-mode=symbol}
+\captionsetup[table]{labelsep=endash, justification=raggedright, singlelinecheck=false}
+\captionsetup[figure]{labelsep=endash}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\newcommand{\Ang}{\text{\AA}}
+
+\geometry{left=30mm, right=10mm, top=20mm, bottom=20mm}
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+\onehalfspacing
+Белорусский государственный университет\\
+Факультет радиофизики и компьютерных технологий
+
+\vspace{4cm}
+
+\textbf{ОТЧЁТ}\\
+по лабораторной работе №5\\[0.3cm]
+\textbf{«Спектроскоп с призмой»}
+
+\vspace{4cm}
+
+\begin{flushright}
+\begin{tabular}{@{}p{7.5cm}@{}}
+\raggedright
+Выполнил:\\
+студент 2 курса 8 группы\\
+Нацевский М. А.\\
+Преподаватель:\\
+Трухан С. В.\\
+\end{tabular}
+\end{flushright}
+
+\vfill
+Минск, 2026
+\end{center}
+\end{titlepage}
+\setcounter{page}{2}
+
+\section*{Цель работы}
+
+Измерить показатель преломления стекла призмы для различных длин волн и построить дисперсионную кривую. Определить угловую и линейную дисперсии и разрешающую способность призменного спектрального прибора.
+
+\section*{Краткая теория}
+
+Угол $\varphi$ между падающим на призму и вышедшим из неё лучами называется углом отклонения. Он минимален при симметричном ходе лучей, когда луч внутри равнобедренной призмы параллелен её основанию (рис.~\ref{fig:prism}).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \coordinate (A) at (-2.6,0);
+  \coordinate (C) at (2.6,0);
+  \coordinate (B) at (0,4.2);
+  \coordinate (P) at (-1.61,1.6);
+  \coordinate (Q) at (1.61,1.6);
+  \coordinate (M) at (0,2.385);
+  \fill[blue!8] (A) -- (B) -- (C) -- cycle;
+  \draw[thick] (A) -- (B) -- (C) -- cycle;
+  \draw[red, thick, ->, >=stealth] (-4.6,0.15) -- (P);
+  \draw[red, thick] (P) -- (Q);
+  \draw[red, thick, ->, >=stealth] (Q) -- (4.6,0.15);
+  \draw[dashed] (P) -- (M) -- (1.9,3.31);
+  \draw[dashed] (Q) -- (M);
+  \draw (0.9,2.824) arc[start angle=26, end angle=-26, radius=1];
+  \node[right] at (2.0,2.385) {$\varphi_{\min}$};
+  \draw[->, >=stealth, thin] (2.05,2.385) -- (1.02,2.385);
+  \draw (-0.33,3.67) arc[start angle=238, end angle=302, radius=0.62];
+  \node at (0,3.3) {$\theta$};
+  \node[left] at (A) {$A$};
+  \node[right] at (C) {$C$};
+  \node[above] at (B) {$B$};
+\end{tikzpicture}
+\caption{Ход луча в призме в положении наименьшего отклонения}
+\label{fig:prism}
+\end{figure}
+
+Показатель преломления выражается через преломляющий угол $\theta$ и угол наименьшего отклонения $\varphi_{\min}$:
+\begin{equation}
+  n = \frac{\sin\dfrac{\theta + \varphi_{\min}}{2}}{\sin\dfrac{\theta}{2}}.
+  \label{eq:n}
+\end{equation}
+
+Угловая дисперсия $D_\varphi = d\varphi/d\lambda$ характеризует угловое расстояние между близкими спектральными линиями. В положении наименьшего отклонения
+\begin{equation}
+  D_\varphi = \frac{2\sin(\theta/2)}{\sqrt{1 - n^2\sin^2(\theta/2)}}\,\left|\frac{dn}{d\lambda}\right|.
+  \label{eq:Dphi}
+\end{equation}
+
+Линейная дисперсия связана с угловой через фокусное расстояние $f_2$ камерного объектива, а обратная линейная дисперсия равна интервалу длин волн на единицу длины спектра:
+\begin{equation}
+  D_l = f_2 D_\varphi, \qquad D_l^{*} = \frac{1}{D_l}.
+  \label{eq:Dl}
+\end{equation}
+
+Теоретическая разрешающая способность призмы с основанием $t$ определяется дифракцией на её оправе:
+\begin{equation}
+  R = \frac{\lambda}{\delta\lambda} = t\left|\frac{dn}{d\lambda}\right|.
+  \label{eq:R}
+\end{equation}
+
+\section*{Экспериментальная часть}
+
+Измерения выполнены на гониометре-спектрометре, источником света служила ртутная лампа ДРШ-250. Для определения преломляющего угла призмы зрительная труба наводилась на изображения щели, отражённые от двух граней призмы. Получены отсчёты $\psi_1 = 66^\circ 12' 50''$ и $\psi_2 = 299^\circ 13' 16''$, откуда
+\[
+  \theta = \frac{1}{2}\left[\psi_1 + \left(360^\circ - \psi_2\right)\right] = 63^\circ 29' 47''.
+\]
+
+Для каждой спектральной линии призма устанавливалась в положение наименьшего отклонения. Результаты приведены в табл.~\ref{tab:phi}. Значения $n$ рассчитаны по формуле~\eqref{eq:n}, $n_{\text{К}}$ --- значения, рассчитанные по аппроксимирующей дисперсионной кривой. Измерения выполнены для одной призмы.
+
+\begin{table}[htbp]
+\caption{Углы наименьшего отклонения и показатель преломления}
+\label{tab:phi}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{clcccc}
+\toprule
+№ & Линия & $\lambda$, \AA & $\varphi_{\min}$ & $n$ & $(n - n_{\text{К}})\cdot 10^{4}$ \\
+\midrule
+1 & фиолетовая & 4046,77 & $55^\circ 20' 00''$ & 1,63606 & $+0{,}76$ \\
+2 & фиолетовая & 4077,80 & $55^\circ 12' 43''$ & 1,63504 & $-0{,}30$ \\
+3 & синяя & 4339,01 & $54^\circ 24' 20''$ & 1,62818 & $-0{,}70$ \\
+4 & синяя & 4347,50 & $54^\circ 23' 21''$ & 1,62804 & $-0{,}14$ \\
+5 & синяя & 4358,34 & $54^\circ 21' 20''$ & 1,62775 & $-0{,}51$ \\
+6 & сине-зелёная & 4916,00 & $53^\circ 11' 00''$ & 1,61763 & $+1{,}84$ \\
+7 & зелёная & 5460,72 & $52^\circ 22' 59''$ & 1,61062 & $-0{,}16$ \\
+8 & жёлтая & 5769,60 & $52^\circ 02' 30''$ & 1,60761 & $-1{,}03$ \\
+9 & жёлтая & 5790,66 & $52^\circ 01' 32''$ & 1,60747 & $-0{,}65$ \\
+10 & красная & 6234,35 & $51^\circ 40' 00''$ & 1,60429 & $+0{,}91$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Длина волны красной линии при измерениях не записывалась. Ей сопоставлена линия 6234,35~\AA: с ней остаточное отклонение точек от дисперсионной кривой составляет $1{,}0\cdot 10^{-4}$, а с соседней линией 6123,46~\AA{} --- $1{,}8\cdot 10^{-4}$.
+
+\section*{Обработка экспериментальных данных}
+
+Дисперсионная кривая (рис.~\ref{fig:disp}) аппроксимирована формулой Коши методом наименьших квадратов:
+\[
+  n(\lambda) = A + \frac{B}{\lambda^2} + \frac{C}{\lambda^4},
+\]
+где $A = 1{,}5853$, $B = 6{,}66\cdot 10^{-3}$~мкм$^2$, $C = 2{,}69\cdot 10^{-4}$~мкм$^4$. Остаточное среднеквадратичное отклонение $s_n = 1{,}0\cdot 10^{-4}$ соответствует случайной погрешности измерения угла $\delta\varphi = s_n / (\partial n / \partial\varphi) \approx 0{,}7'$.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.9\textwidth, height=8cm,
+  xlabel={$\lambda$, \AA}, ylabel={$n$},
+  grid=major, xmin=3900, xmax=6400, ymin=1.60, ymax=1.64,
+  legend pos=north east, legend cell align=left,
+  scaled ticks=false, xtick distance=500,
+  xticklabel style={/pgf/number format/.cd, 1000 sep={}, fixed},
+  yticklabel style={/pgf/number format/.cd, use comma, fixed, fixed zerofill, precision=2}
+]
+\addplot[only marks, mark=*, blue] coordinates {
+(4046.77,1.63606) (4077.80,1.63504) (4339.01,1.62818) (4347.50,1.62804) (4358.34,1.62775)
+(4916.00,1.61763) (5460.72,1.61062) (5769.60,1.60761) (5790.66,1.60747) (6234.35,1.60429)
+};
+\addplot[red, thick, samples=100, domain=3950:6350] {1.58527458 + 0.00666251336*(10000/x)^2 + 0.000268882389*(10000/x)^4};
+\legend{Эксперимент, Формула Коши}
+\end{axis}
+\end{tikzpicture}
+\caption{Дисперсионная кривая стекла призмы}
+\label{fig:disp}
+\end{figure}
+
+Для двух близких линий экспериментальная угловая дисперсия равна
+\[
+  D_\varphi^{\text{эксп}} = \frac{\varphi_1 - \varphi_2}{\lambda_2 - \lambda_1}.
+\]
+В фиолетовой области $\varphi_1 - \varphi_2 = 7'17''$ при $\lambda_2 - \lambda_1 = 31{,}03$~\AA, в жёлтой области $\varphi_1 - \varphi_2 = 58''$ при $\lambda_2 - \lambda_1 = 21{,}06$~\AA. Погрешность при доверительной вероятности $0{,}95$ ($t_{0{,}95;\,7} = 2{,}36$):
+\[
+  \Delta D_\varphi^{\text{эксп}} = t_{0{,}95;\,7}\,\frac{\sqrt{2}\,\delta\varphi}{\lambda_2 - \lambda_1}.
+\]
+
+Расчётные значения получены по формулам~\eqref{eq:Dphi}--\eqref{eq:R} при $f_2 = 400$~мм. Значения $n$ и $dn/d\lambda$ взяты из дисперсионной кривой в середине каждого интервала. Ширина основания призмы $t$ при измерениях не записывалась, поэтому разрешающая способность приведена в расчёте на единицу длины основания. Результаты сведены в табл.~\ref{tab:disp}.
+
+\begin{table}[htbp]
+\caption{Дисперсионные характеристики призмы}
+\label{tab:disp}
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+Величина & Фиолетовая область & Жёлтая область \\
+\midrule
+$\lambda$, \AA & 4062,28 & 5780,13 \\
+$n$ & 1,6355 & 1,6076 \\
+$|dn/d\lambda|$, $10^{-6}$~\AA$^{-1}$ & $29{,}6 \pm 0{,}8$ & $8{,}57 \pm 0{,}22$ \\
+$D_\varphi^{\text{эксп}}$, $'/$\AA & $0{,}23 \pm 0{,}08$ & $0{,}05 \pm 0{,}11$ \\
+$D_\varphi^{\text{расч}}$, $'/$\AA & $0{,}210 \pm 0{,}006$ & $0{,}058 \pm 0{,}002$ \\
+$D_l^{\text{эксп}}$, мм/\AA & $0{,}027 \pm 0{,}009$ & $0{,}005 \pm 0{,}013$ \\
+$D_l^{\text{расч}}$, мм/\AA & $0{,}0245 \pm 0{,}0006$ & $0{,}0068 \pm 0{,}0002$ \\
+$D_l^{*}$, \AA/мм & $40{,}9 \pm 1{,}1$ & $148 \pm 4$ \\
+$R/t$, см$^{-1}$ & $2960 \pm 80$ & $860 \pm 20$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+В фиолетовой области экспериментальное и расчётное значения дисперсии согласуются в пределах погрешности. В жёлтой области разность углов $58''$ сравнима с погрешностью её измерения, поэтому экспериментальное значение не противоречит расчётному, но точно проверить его не позволяет.
+
+\section*{Вывод}
+
+Измерена зависимость показателя преломления стекла призмы от длины волны: $n$ убывает от $1{,}6361$ при $\lambda = 4046{,}77$~\AA{} до $1{,}6043$ при $\lambda = 6234{,}35$~\AA, и эта зависимость хорошо описывается формулой Коши. Угловая дисперсия, линейная дисперсия и разрешающая способность на единицу длины основания в фиолетовой области примерно в $3{,}5$ раза больше, чем в жёлтой: $D_\varphi = (0{,}210 \pm 0{,}006)~'/$\AA{} и $(0{,}058 \pm 0{,}002)~'/$\AA{} соответственно. Следовательно, призменный прибор лучше разделяет спектральные линии в коротковолновой области.
+
+\end{document}
